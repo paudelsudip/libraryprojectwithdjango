@@ -1,0 +1,50 @@
+{% extends "books/base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block extra_css %}
+<style>
+  .auth-wrap { max-width: 400px; margin: 3rem auto; }
+  .auth-header { text-align: center; margin-bottom: 2rem; }
+  .auth-header h1 { font-family: 'Playfair Display', serif; font-size: 2rem; }
+  .auth-header h1 span { color: var(--gold); }
+  .auth-header p { color: var(--muted); margin-top: 0.4rem; font-size: 0.875rem; }
+  .form-actions { margin-top: 1.5rem; }
+  .form-actions .btn { width: 100%; justify-content: center; padding: 0.75rem; }
+  .auth-footer { text-align: center; margin-top: 1.2rem; font-size: 0.875rem; color: var(--muted); }
+  .auth-footer a { color: var(--gold); text-decoration: none; }
+  .auth-footer a:hover { text-decoration: underline; }
+  .errorlist li { color: #c94c4c; font-size: 0.82rem; margin-top: 0.3rem; list-style: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-wrap">
+  <div class="auth-header">
+    <h1>Welcome <span>Back</span></h1>
+    <p>Sign in to access your library</p>
+  </div>
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div style="color:#c94c4c;font-size:0.85rem;margin-bottom:1rem;">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" class="form-control" placeholder="Your username" autofocus>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Your password">
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Sign In</button>
+      </div>
+    </form>
+  </div>
+  <div class="auth-footer">
+    Don't have an account? <a href="{% url 'register' %}">Register here</a>
+  </div>
+</div>
+{% endblock %}

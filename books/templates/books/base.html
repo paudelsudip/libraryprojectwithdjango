@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}My Library{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0e0c;
+      --surface: #1a1814;
+      --card: #221f1a;
+      --border: #2e2a24;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --text: #e8e4dc;
+      --muted: #7a7165;
+      --danger: #c94c4c;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      background-image: radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.04) 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.03) 0%, transparent 50%);
+    }
+
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links { display: flex; gap: 0.5rem; align-items: center; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--text); background: var(--border); }
+
+    .btn-nav {
+      background: var(--gold) !important;
+      color: #0f0e0c !important;
+      font-weight: 500;
+    }
+
+    .btn-nav:hover { background: var(--gold-light) !important; }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+    .messages { margin-bottom: 1.5rem; }
+
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      border-left: 3px solid var(--gold);
+      background: rgba(201,168,76,0.08);
+      color: var(--gold-light);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    /* Forms */
+    .form-control {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.65rem 0.9rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    .form-control:focus { border-color: var(--gold); }
+    .form-control::placeholder { color: var(--muted); }
+
+    select.form-control option { background: var(--surface); }
+
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .form-check { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+    .form-check-input { width: 16px; height: 16px; accent-color: var(--gold); cursor: pointer; }
+    .form-check-label { font-size: 0.9rem; color: var(--text); cursor: pointer; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.6rem 1.2rem; border-radius: 8px; border: none;
+      font-family: 'DM Sans', sans-serif; font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; text-decoration: none; transition: all 0.2s;
+    }
+
+    .btn-primary { background: var(--gold); color: #0f0e0c; }
+    .btn-primary:hover { background: var(--gold-light); }
+
+    .btn-outline { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--muted); color: var(--text); }
+
+    .btn-danger { background: rgba(201,76,76,0.15); color: var(--danger); border: 1px solid rgba(201,76,76,0.3); }
+    .btn-danger:hover { background: rgba(201,76,76,0.25); }
+
+    .errorlist { list-style: none; margin-top: 0.3rem; }
+    .errorlist li { color: var(--danger); font-size: 0.8rem; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="{% url 'book_list' %}">📚 My Library</a>
+  <div class="nav-links">
+    {% if user.is_authenticated %}
+      <a href="{% url 'book_list' %}">Books</a>
+      <a href="{% url 'book_create' %}">+ Add Book</a>
+      <form method="post" action="{% url 'logout' %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" style="background:none;border:none;cursor:pointer;" class="nav-links">
+          <a href="#" onclick="this.closest('form').submit()">Logout ({{ user.username }})</a>
+        </button>
+      </form>
+    {% else %}
+      <a href="{% url 'login' %}">Login</a>
+      <a href="{% url 'register' %}" class="btn-nav">Register</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div class="container">
+  {% if messages %}
+    <div class="messages">
+      {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

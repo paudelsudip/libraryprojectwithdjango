@@ -1,0 +1,61 @@
+{% extends "books/base.html" %}
+
+{% block title %}{{ action }} Book{% endblock %}
+
+{% block extra_css %}
+<style>
+  .form-header { margin-bottom: 2rem; }
+  .form-header h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; }
+  .form-header h1 span { color: var(--gold); }
+  .form-header p { color: var(--muted); font-size: 0.875rem; margin-top: 0.3rem; }
+
+  .form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-header">
+  <h1>{% if action == 'Edit' %}<span>Edit</span> Book{% else %}Add a <span>New Book</span>{% endif %}</h1>
+  <p>{% if action == 'Edit' %}Update the details for "{{ book.title }}"{% else %}Add a book to your personal library{% endif %}</p>
+</div>
+
+<div class="card">
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="form-group">
+      <label for="{{ form.title.id_for_label }}">Title</label>
+      {{ form.title }}
+      {% if form.title.errors %}<ul class="errorlist">{% for e in form.title.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.author.id_for_label }}">Author</label>
+      {{ form.author }}
+      {% if form.author.errors %}<ul class="errorlist">{% for e in form.author.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.genre.id_for_label }}">Genre</label>
+      {{ form.genre }}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.description.id_for_label }}">Description</label>
+      {{ form.description }}
+    </div>
+
+    <div class="form-group">
+      <div class="form-check">
+        {{ form.is_read }}
+        <label class="form-check-label" for="{{ form.is_read.id_for_label }}">I've already read this book</label>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{{ action }} Book</button>
+      <a href="{% url 'book_list' %}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

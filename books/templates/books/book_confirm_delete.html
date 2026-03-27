@@ -1,0 +1,31 @@
+{% extends "books/base.html" %}
+
+{% block title %}Delete Book{% endblock %}
+
+{% block extra_css %}
+<style>
+  .delete-box { text-align: center; padding: 2rem; }
+  .delete-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .delete-box h1 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 0.5rem; }
+  .delete-box p { color: var(--muted); margin-bottom: 1.5rem; }
+  .book-name { color: var(--gold); }
+  .delete-actions { display: flex; gap: 0.75rem; justify-content: center; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="delete-box">
+    <div class="delete-icon">🗑️</div>
+    <h1>Remove from Library?</h1>
+    <p>Are you sure you want to remove <span class="book-name">"{{ book.title }}"</span> by {{ book.author }}?<br>This action cannot be undone.</p>
+    <form method="post">
+      {% csrf_token %}
+      <div class="delete-actions">
+        <button type="submit" class="btn btn-danger">Yes, Remove It</button>
+        <a href="{% url 'book_list' %}" class="btn btn-outline">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
