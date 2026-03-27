@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from books.forms import RegisterForm
 
+
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)

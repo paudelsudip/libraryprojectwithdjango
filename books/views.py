@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import Book
 from .forms import BookForm
 
+
 @login_required
 def book_list(request):
     books = Book.objects.filter(user=request.user)
@@ -15,10 +16,12 @@ def book_list(request):
         'unread_count': unread_count,
     })
 
+
 @login_required
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk, user=request.user)
     return render(request, 'books/book_detail.html', {'book': book})
+
 
 @login_required
 def book_create(request):
@@ -32,7 +35,9 @@ def book_create(request):
             return redirect('book_list')
     else:
         form = BookForm()
-    return render(request, 'books/book_form.html', {'form': form, 'action': 'Add'})
+    return render(request, 'books/book_form.html',
+                  {'form': form, 'action': 'Add'})
+
 
 @login_required
 def book_update(request, pk):
@@ -45,7 +50,9 @@ def book_update(request, pk):
             return redirect('book_list')
     else:
         form = BookForm(instance=book)
-    return render(request, 'books/book_form.html', {'form': form, 'action': 'Edit', 'book': book})
+    return render(request, 'books/book_form.html',
+                  {'form': form, 'action': 'Edit', 'book': book})
+
 
 @login_required
 def book_delete(request, pk):
