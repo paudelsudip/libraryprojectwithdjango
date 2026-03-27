@@ -28,7 +28,6 @@ class BookForm(forms.ModelForm):
         }
 
 
-
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
